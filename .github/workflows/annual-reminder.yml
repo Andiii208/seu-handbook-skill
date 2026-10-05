@@ -1,0 +1,55 @@
+name: 年度手册更新提醒
+
+on:
+  schedule:
+    - cron: "0 0 1 9 *"   # 每年 9 月 1 日 00:00 UTC
+  workflow_dispatch:        # 允许手动触发
+
+permissions:
+  issues: write
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 创建（或跳过）年度更新提醒 issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: existing } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "open",
+              labels: "annual-reminder",
+            });
+            if (existing.length > 0) {
+              core.notice(`已有未关闭的提醒（#${existing[0].number}），跳过创建`);
+              return;
+            }
+            // 标签不存在时先创建（不存在才创建，避免重复创建的报错噪音）
+            try {
+              await github.rest.issues.createLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: "annual-reminder",
+                color: "0e8a16",
+                description: "年度手册更新提醒（9 月自动创建）",
+              });
+            } catch (e) {
+              if (!/Already exists/.test(e.message)) throw e;
+            }
+            const year = new Date().getFullYear();
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `年度提醒：${year} 版《大学生手册》可能已发布，请核对并更新`,
+              labels: ["annual-reminder"],
+              body:
+`学校每年 8—9 月印发新版《大学生手册》。请按以下清单核对：
+
+1. 到教务处下载专区-学籍专区（<https://jwc.seu.edu.cn/xjk/list.htm>）确认是否已发布 ${year} 版；
+2. 若已发布，按 \`tools/rebuild.md\` 流程再生产：OCR → 清洗 → 数值表逐值对图 → 更新 references/ 与 data/ → \`python3 tools/check.py\` 全绿 → 重跑 tests/golden-qa.md 并记录到 regression-notes.md；
+3. 更新版本声明三处：SKILL.md 版本横幅、README、pack（重新运行 \`python3 tools/make_pack.py\`）。
+
+当年不更新的话，直接关闭本 issue 并注明原因即可。`,
+            });
