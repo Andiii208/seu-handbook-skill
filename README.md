@@ -24,10 +24,10 @@
 
 ```bash
 # Claude Code
-git clone https://github.com/<your-name>/seu-handbook-skill.git ~/.claude/skills/seu-handbook
+git clone https://github.com/Andiii208/seu-handbook-skill.git ~/.claude/skills/seu-handbook
 
 # ZCode（用户级）
-git clone https://github.com/<your-name>/seu-handbook-skill.git ~/.zcode/skills/seu-handbook
+git clone https://github.com/Andiii208/seu-handbook-skill.git ~/.zcode/skills/seu-handbook
 
 # 其他 Agent：放入其 skills 目录即可；找不到目录时可把整个文件夹放进项目，让 Agent 读 SKILL.md
 ```
@@ -35,7 +35,7 @@ git clone https://github.com/<your-name>/seu-handbook-skill.git ~/.zcode/skills/
 **方式二：放在项目里**
 
 ```bash
-git clone https://github.com/<your-name>/seu-handbook-skill.git ./.seu-handbook-skill
+git clone https://github.com/Andiii208/seu-handbook-skill.git ./.seu-handbook-skill
 ```
 
 然后在对话里让 Agent"读取 `./.seu-handbook-skill/SKILL.md` 并按其指引回答"。
