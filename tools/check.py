@@ -8,6 +8,8 @@
   3. 引用有效性：data/ 里以 "NN-短名 第X条" 形式引用的规章文件与条号必须存在。
   4. URL 活性：sources.md、references/49-fuwu-zhinan.md、data/*.md 中的 http(s) 链接
      状态码异常时报告（--skip-net 跳过）；已在正文标注"实测不通/打不开/无法连接"的链接视为已知失效，只复核不报错。
+  5. 知识包同步：pack/seu-handbook.md 与 SKILL.md/data/sources/00-index 内容一致
+     （不一致说明改了源忘了重新生成）。
 """
 import os
 import re
@@ -125,11 +127,25 @@ def check_urls():
             print(f"[URL] {u} → {code}（新失效，需标注或更新）"); bad += 1
     return bad
 
+def check_pack():
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import make_pack
+    pack = os.path.join(ROOT, "pack", "seu-handbook.md")
+    if not os.path.exists(pack):
+        print("[知识包] pack/seu-handbook.md 不存在，请运行 python3 tools/make_pack.py")
+        return 1
+    if open(pack, encoding="utf-8").read() != make_pack.build()[0]:
+        print("[知识包] pack/seu-handbook.md 与源文件不同步，请重新运行 python3 tools/make_pack.py")
+        return 1
+    return 0
+
+
 def main():
     skip_net = "--skip-net" in sys.argv
     results = {"条号连续性": check_articles(),
                "路径解析": check_paths(),
-               "引用有效性": check_citations()}
+               "引用有效性": check_citations(),
+               "知识包同步": check_pack()}
     if not skip_net:
         results["URL 活性"] = check_urls()
     for k, v in results.items():
