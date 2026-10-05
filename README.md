@@ -42,6 +42,18 @@ git clone https://github.com/Andiii208/seu-handbook-skill.git ./.seu-handbook-sk
 
 安装后在支持自动触发（description 匹配）的 Agent 中，直接提问即可；不支持的 Agent，说一句"用 seu-handbook skill"或让它先读 SKILL.md。
 
+**方式三：装到 ZCode 项目级 skills（只对当前项目生效，不进全局）**
+
+```bash
+cd <本仓库>                      # 仓库根目录
+mkdir -p .zcode/skills/seu-handbook
+tar --exclude='./.git' --exclude='./.zcode' -cf - . | (cd .zcode/skills/seu-handbook && tar -xf -)
+echo ".zcode/" >> .gitignore     # 安装副本不入库
+```
+
+仓库内容改完之后，重跑上面的 tar 两行即可同步（或用 `rsync -a --delete --exclude .git --exclude .zcode ./ .zcode/skills/seu-handbook/`）。
+注意：项目级 skill 在**会话启动时**扫描，装好后要新开一个会话（或重载窗口）才会被发现。
+
 ## 使用示例
 
 ```
