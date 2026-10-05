@@ -25,16 +25,18 @@
 ## 内容布局
 
 - `references/`：手册全文按规章拆分（48 个校级规章 + 教育部 41 号令附录 + 服务指南 + 卷首简介 + `00-index.md` 总索引）。
-- `data/`：高频数值速查表（绩点、研学加分、社会实践、竞赛、奖助、荣誉称号、处分、学业红线、生活规则）。
+- `data/`：高频数值速查表（绩点、研学加分、社会实践、竞赛、奖助、荣誉称号、处分、学业红线、生活规则）+ `glossary.md`（口语词→手册规范术语映射，检索前先对词）。
 - `pack/seu-handbook.md`：由 `tools/make_pack.py` 生成的单文件知识包（回答规范 + 索引 + 数据表 + 官方渠道），供上传给不支持读仓库的 Agent；改完源文件必须重新生成。
 - `sources.md`：官方信息源清单（"当年才变"的信息去哪儿查）。
 
 ## 检索方法
 
-1. **先读 `references/00-index.md`**，按"快速路由表"锁定 `data/` 表或规章文件。
-2. 在目标文件内用关键词 grep 或按 `**第X条**` 定位原文。
-3. 数值型问题（能加几分、多少钱、什么比例、多少天内）以 `data/` 表为准，不要在全文里目测表格。
-4. 跨文件问题（推免、评奖、毕业、申诉等）按索引"交叉引用簇"把相关规章**都读一遍**再作答。
+1. **口语词先对词**：提问用的是"保研/挂科/综测/延毕/跑操"这类口语时，先查 `data/glossary.md` 换成手册规范术语，再检索——直接拿口语词 grep 全文会搜不到。
+2. **先读 `references/00-index.md`**，按"快速路由表"锁定 `data/` 表或规章文件；常见问题也可按本文件"常见问题示例"直接定位，不必每轮通读索引。
+3. 定向检索用 `rg -l '<关键词>' references/`：每个 references 文件头的 `topics` 字段就是为口语提问准备的关键词表（如 `10-tuimian.md` 的 topics 含"推免/推荐条件/综合成绩"）。命中文件后再用关键词或条号细读。
+4. 在目标文件内按 `**第X条**` 定位原文。唯一例外：`18-zhuoyue.md` 按"节"组织，引用格式为"第X节"而非"第X条"。
+5. 数值型问题（能加几分、多少钱、什么比例、多少天内）以 `data/` 表为准，不要在全文里目测表格。
+6. 跨文件问题（推免、评奖、毕业、申诉等）按索引"交叉引用簇"把相关规章**都读一遍**再作答。
 
 ## 回答规范（必须遵守）
 
@@ -57,7 +59,28 @@
 - "我绩点 3.2 能评三好吗" → 读 `data/honors.md` + `data/gpa-table.md`，给出门槛 3.0 及附加条件（体育良好、宿舍 90 分、无不及格），附条号。
 - "省二竞赛加多少研学分" → 读 `data/competitions.md` + `data/research-scores.md`，给出省级二等奖 1.2 分，并说明 A+/A/C 类倍数规则和校级途径 4 分上限。
 - "宿舍可以用吹风机吗" → 读 `data/dorm-and-life.md`，回答 800W 以上属违章电器但吹风机、热水壶除外，附 `references/41-gongyu.md` 第三十条。
-- "挂科了还能保研吗" → 读 `data/academic-progress.md` + `references/10-tuimian.md`，说明推免基本条件与"补考重修成绩不参与免研排名"。
+- "挂科了还能保研吗" → 先查 `data/glossary.md`（保研→推免、挂科→课程不及格），读 `data/academic-progress.md` + `references/10-tuimian.md`，说明推免基本条件与"补考重修成绩不参与免研排名"。
+
+### 完整回答示例（计算 + 资格混合型，照此结构作答）
+
+> **问**：我大二，绩点 3.1，上学期挂了一门课，这学期还有一门在重修，能评这学年的三好学生吗？
+>
+> **答**：**不能。** 绩点 3.1 虽过门槛，但三好学生要求本学年无不及格课程，且体育成绩良好（80 分）及以上并达《国家学生体质健康标准》良好成绩。
+> 依据：《东南大学全日制本科三好学生、三好学生标兵、优秀学生干部评选实施办法》第一条（手册 120—121 页）；体育良好即体育课程 80 分，见 `references/16-tiyu.md`，门槛汇总见 `data/honors.md`。
+> 提醒：如果你下学期起成绩无不及格、综测为优、宿舍卫生 90 分以上，可以再申请；校级规则之外以学院当年通知为准。
+> *以上依据为 2025 版《东南大学大学生手册》（内容截至 2025 年 8 月版），具体执行以学校和主管部门当年文件为准。*
+> *答案有误或发现过时内容，欢迎到 github.com/Andiii208/seu-handbook-skill 提 issue。*
+
+## 高频陷阱（答前先查，都是历届实测踩过的坑）
+
+1. **研学分 4 分上限有范围**："通过校级及以下级别研学途径获得的课外研学分值上限 4 分"只适用校级及以下；省级、国家级途径不受此限；聆听讲座途径另有分科上限（理工医 1 分、文管艺 1.5 分）。（`data/research-scores.md`）
+2. **缓缴学费 ≠ 暂缓注册**：前者是收费办法第四条的资助程序，后者是学籍规定第五条的注册程序；不注册不能参加教学活动，超两周未办暂缓注册予以退学处理。（`data/dorm-and-life.md`）
+3. **违章电器有例外**：800W 以上属违章电器，但吹风机、热水壶除外。（`references/41-gongyu.md`）
+4. **"体育良好"有量化**：评三好的体育良好 = 体育课程 80 分 + 体测达《国家学生体质健康标准》良好；体测评分细则不在手册内。（`data/honors.md`、`references/16-tiyu.md`）
+5. **竞赛目录不在手册**：A+/A/B/C 分类由"东南大学学科竞赛管理系统"在线维护，手册从未印发，**不得猜测分类**。（`sources.md`）
+6. **推免加分值是学院定的**：校级只规定课程成绩权重 ≥80% 和综合成绩构成，具体分级别加分值写在学院推免细则里。（`references/10-tuimian.md` 第三条）
+7. **体测综评 ≥50 分**：大学 1—3 年级平均 ×50% + 4 年级 ×50%，不合格按结业或肄业处理；但各项目评分标准不在手册。（`references/16-tiyu.md`）
+8. **补考/重修成绩不进选拔排名**：不参与推免（免研）排名、评优排名、校长奖、课程奖评选。（`references/01-xueji.md` 第十条）
 
 ## 维护
 
@@ -76,6 +99,7 @@
 | 你要问什么 | 先读这里 | 再看 |
 |---|---|---|
 | 绩点多少、均绩怎么算、成绩对应几点 | `../data/gpa-table.md` | `references/14-xuefenzhi.md` |
+| 口语说法（保研/挂科/综测/延毕/跑操…）对应哪个规范术语 | `../data/glossary.md` | 对应 data 表或规章 |
 | 竞赛/论文/SRTP 能加多少研学学分 | `../data/research-scores.md` | `references/21-yanxue.md` |
 | 竞赛分类、奖金、认定流程 | `../data/competitions.md` | `references/23-jingsai.md` |
 | 社会实践学分怎么拿 | `../data/social-practice.md` | `references/22-shehui-shijian.md` |
@@ -109,7 +133,7 @@
 | 15-kaoshi.md | 学生考试管理办法 | 057–059 | 考场纪律、作弊认定与处理 |
 | 16-tiyu.md | 体育教学及考核规则 | 060–061 | 跑步 45 次、体测综评、体育学分 |
 | 17-bishe.md | 毕业设计（论文）管理办法 | 062–071 | 选题开题中期答辩、查重、评分比例 3:3:4 |
-| 18-zhuoyue.md | "卓越工程师教育培养计划"毕业设计（论文）工作条例 | 072–079 | 不少于 16 周、校企双导师、评分 4:2:4 |
+| 18-zhuoyue.md | "卓越工程师教育培养计划"毕业设计（论文）工作条例 | 072–079 | 不少于 16 周、校企双导师、评分 4:2:4（注意：本篇按“节”组织，引用格式为“第X节”而非“第X条”） |
 | 19-gongpai.md | 公派交流学习管理办法 | 080–083 | 选拔条件、学籍管理、累计不超一年 |
 | 20-xuefen-rending.md | 公派交流学习课程学分认定管理办法 | 084–086 | 及格以上认定、每学期≥15 学分、交流结束第 8 周前办理 |
 | 21-yanxue.md | 本科生课外研学成绩认定办法 | 087–093 | 六途径分值（2025 级起执行）、研学成绩等级 |
@@ -499,6 +523,89 @@
 - 需持因私证照并自行办理签证；赴台湾申请按国家规定报江苏省台湾事务办公室审批。
 - 在外期间严格遵守外事纪律；不得延长停留天数（超期费用不予报销）；严禁前往未经审批的其他国家。
 - 赴国（境）外期间医疗费用按国家公费医疗管理规定不予报销，出境前需办理相关保险。
+
+
+<!-- ===== /Users/xuyijia/dev/seu skill/data/glossary.md · 数值速查表 · glossary ===== -->
+
+# 学生口语说法 → 手册规范术语映射表
+
+> 用途：同学提问用的是口语，手册用的是规范术语。**先在本表把口语词换成规范术语，再去 references/ 或 data/ 检索**——直接拿口语词 grep 全文经常搜不到，容易答偏或编造。
+> 本表只做"对词"，规则本身以 `references/` 原文和 `data/` 表为准；手册未收录的内容（如综合素质测评办法原文）见 `sources.md` 对应渠道。
+
+## 一、学业与成绩
+
+| 学生常说 | 手册规范术语 | 去哪查 |
+|---|---|---|
+| 绩点、几点、满绩 | 平均学分绩点（学分绩点） | `data/gpa-table.md` |
+| 挂科 | 课程不及格；后续走补考、重修 | `data/academic-progress.md`、`references/14-xuefenzhi.md` |
+| 补考 | 补考（补考一次机会，成绩记"补"） | `references/14-xuefenzhi.md`、`01-xueji.md` |
+| 重修、交钱重修 | 跟班重修（75 分及以下及格课程可申请） | `references/14-xuefenzhi.md` 第十九条 |
+| 缓考、晚点考 | 缓考 | `references/14-xuefenzhi.md`、`16-tiyu.md` |
+| 免修、免考 | 免修（免修考试成绩 75 分以上方获准） | `references/14-xuefenzhi.md` 第二十三条 |
+| 免听 | 免听（及格重修课程冲突时办理） | `references/14-xuefenzhi.md` 第十九条 |
+| 延毕、晚毕业 | 延长学习年限 | `references/11-yanchang.md` |
+| 提前毕业 | 提前毕业（学费少收一年/半年） | `references/45-shoufei.md`、`01-xueji.md` |
+| 肄业、结业 | 结业、肄业（换毕业证办法） | `references/01-xueji.md` |
+
+## 二、加分与综合素质
+
+| 学生常说 | 手册规范术语 | 去哪查 |
+|---|---|---|
+| 加分、研学分、创新学分 | 课外研学成绩（课外研学学分，毕业须修满 2 学分） | `data/research-scores.md`、`references/21-yanxue.md` |
+| 综测、综合分、素质分 | 《东南大学本科生综合素质测评办法》——**原文手册未收录**，向学院/学生处查询 | `sources.md` |
+| 大创、大创项目 | SRTP（大学生创新创业项目） | `data/research-scores.md`、`references/21-yanxue.md` |
+| 打比赛、竞赛 | 学科竞赛（A+/A/B/C 分类，目录在线维护不在手册） | `data/competitions.md`、`references/23-jingsai.md` |
+| 发论文、专利、软著 | 发表论文/专利授权（第一署名单位须为东南大学） | `data/research-scores.md`、`references/21-yanxue.md` |
+| 志愿活动、支教 | 社会实践课程学分（必修 1 学分） | `data/social-practice.md`、`references/22-shehui-shijian.md` |
+| 创业、开公司 | 自主创业（科技园认定） | `data/research-scores.md`、`references/21-yanxue.md` |
+
+## 三、评奖评优与资助
+
+| 学生常说 | 手册规范术语 | 去哪查 |
+|---|---|---|
+| 保研、推免、免研 | 推荐优秀应届本科毕业生免试攻读研究生（简称"推免"） | `references/10-tuimian.md`、`data/academic-progress.md` |
+| 三好、评三好 | 三好学生评选 | `references/30-sanhao.md`、`data/honors.md` |
+| 标兵 | 三好学生标兵 | `references/30-sanhao.md`、`data/honors.md` |
+| 优干、学生干部奖 | 优秀学生干部 | `references/30-sanhao.md`、`data/honors.md` |
+| 国奖 | 国家奖学金 | `references/25-guojiang.md`、`data/scholarships.md` |
+| 励志、励志奖 | 国家励志奖学金 | `references/26-lizhi.md`、`data/scholarships.md` |
+| 校长奖 | 校长奖学金 | `references/27-xiaozhangjiang.md`、`data/scholarships.md` |
+| 贫困生、困难生、补助 | 家庭经济困难学生认定 + 经济困难学生资助 | `references/32-kunnan-rending.md`、`31-zizhu.md` |
+| 助学金 | 国家助学金 | `references/33-zhuxuejin.md`、`data/scholarships.md` |
+| 勤工俭学、打工 | 勤工助学（校内岗 24 元/小时） | `references/34-qingong.md`、`data/scholarships.md` |
+| 助学贷款、生源地贷款 | 国家助学贷款（校园地/生源地信用贷款） | `references/35-daikuan.md` |
+| 当兵、入伍、参军 | 应征入伍（奖励 20000 元、学费补偿代偿） | `references/36-ruwu.md`、`data/scholarships.md` |
+| 绿通、绿色通道 | 绿色通道（入学资助） | `references/31-zizhu.md` |
+
+## 四、纪律与申诉
+
+| 学生常说 | 手册规范术语 | 去哪查 |
+|---|---|---|
+| 处分、记过、警告 | 学生违纪处分（警告/严重警告/记过/留校察看/开除学籍） | `references/37-weiji-chufen.md`、`data/discipline.md` |
+| 申诉、告学校 | 学生申诉处理委员会复查（收到决定书 10 日内书面申诉） | `references/38-shensu.md`、`data/discipline.md` |
+| 作弊、考试违纪 | 考试作弊认定与处理 | `references/15-kaoshi.md`、`37-weiji-chufen.md` |
+| 旷课、翘课 | 旷课（一学期累计 60 学时开除学籍） | `references/37-weiji-chufen.md` 第二十四条 |
+
+## 五、生活与办事
+
+| 学生常说 | 手册规范术语 | 去哪查 |
+|---|---|---|
+| 宿舍、公寓 | 学生公寓 | `references/41-gongyu.md`、`data/dorm-and-life.md` |
+| 熄灯、门禁、晚归 | 门禁制度与熄灯时间 | `references/41-gongyu.md` 第二十四条 |
+| 违章电器、吹风机、热得快 | 宿舍违章电器（800W 以上；吹风机、热水壶除外） | `references/41-gongyu.md`、`data/dorm-and-life.md` |
+| 翻墙、VPN、梯子 | 校园网络系统安全管理制度 | `references/44-wangluo.md` |
+| 跑操、校园跑、跑步打卡 | 跑步锻炼（一二年级每学期 45 次合格） | `references/16-tiyu.md`、`data/dorm-and-life.md` |
+| 体测、体质测试 | 《国家学生体质健康标准》达标测试（综评 ≥50；评分细则不在手册） | `references/16-tiyu.md` |
+| 补办学生证、补校园卡 | 学生证件补办 | `references/40-zhengjian.md` |
+| 评教、教评、怼老师 | 学生评教（期末不评教不能查成绩） | `references/46-pingjiao.md` |
+| 实验室准入、安全考试 | 实验室安全准入考试 / 安全准入报告 | `references/47-shiyanshi.md` |
+| 出国、交换、交流 | 公派交流学习 + 课程学分认定 | `references/19-gongpai.md`、`20-xuefen-rending.md` |
+| 办护照、出境 | 学生因公出国（境） | `references/48-chuguo.md` |
+| 换宿舍、调宿 | 公寓床位调整（网上申请、学校审批） | `references/41-gongyu.md` |
+| 缓交学费、学费缓缴 | 缓缴学费（≠ 暂缓注册：后者是学籍注册程序，超两周未办予退学） | `references/45-shoufei.md`、`01-xueji.md` 第五条 |
+| 转专业、换专业 | 转专业（每学年一次、春季；在校仅一次机会） | `references/07-zhuanzhuanye.md` |
+| 大类分流、分流 | 大类招生专业分流 | `references/09-fenliu.md` |
+| 辅修、双学位、二专业 | 辅修专业 / 辅修学士学位 | `references/06-fuxiu.md` |
 
 
 <!-- ===== /Users/xuyijia/dev/seu skill/data/gpa-table.md · 数值速查表 · gpa-table ===== -->
