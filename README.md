@@ -3,7 +3,7 @@
 把《东南大学大学生手册》变成一个可以装进本地 Agent 的 Skill：不用翻书、不用问同学，直接问 Agent"这事按规定怎么办"，答案带**条款引用**。
 
 - 内容来源：2025 年《东南大学大学生手册》（东南大学校长办公室编，2025 年 8 月）
-- 覆盖范围：48 个校级规章全文 +《普通高等学校学生管理规定》（教育部令第 41 号）+ 服务指南（部门电话/网址）+ 10 张高频数值速查表
+- 覆盖范围：48 个校级规章全文 +《普通高等学校学生管理规定》（教育部令第 41 号）+ 服务指南（部门电话/网址）+ 9 张高频数值速查表
 - 性质：**学生自发的整理汇编，非官方发布**。条文权利归东南大学；执行以学校正式文件和当年通知为准
 
 ## 这个 Skill 能回答什么
@@ -69,13 +69,13 @@ echo ".zcode/" >> .gitignore     # 安装副本不入库
 
 ```
 ├── SKILL.md               # Skill 入口：触发描述、检索路由、回答规范
-├── references/            # 手册全文（按规章拆分，51 个文件）
+├── references/            # 手册全文（按规章拆分，52 个文件）
 │   ├── 00-index.md        #   总索引：快速路由表 + 规章索引 + 交叉引用簇
 │   ├── 01-xueji.md …      #   48 个校级规章（含 frontmatter：页码/执行年级/引用关系）
 │   ├── appendix-moe-41.md #   教育部令第 41 号
 │   ├── 49-fuwu-zhinan.md  #   服务指南（部门电话/网址）
 │   └── 00-front-school-intro.md
-├── data/                  # 高频数值速查表（10 张）
+├── data/                  # 高频数值速查表（9 张）
 │   ├── gpa-table.md  research-scores.md  social-practice.md  competitions.md
 │   ├── scholarships.md  honors.md  discipline.md  academic-progress.md
 │   └── dorm-and-life.md
@@ -88,7 +88,8 @@ echo ".zcode/" >> .gitignore     # 安装副本不入库
 
 - 手册原版为无文字层图片 PDF，本仓库文本由 OCR（macOS Vision，离线）识别后逐篇清洗，**所有数值表与渲染图逐值人工核对**（清单见 `tools/verify-checklist.md`）。
 - 每个规章文件头部记录了手册页码、执行年级、解释单位，便于回溯原书。
-- 回答规范强制"引用条款 + 找不到就说找不到 + 动态信息给官方渠道"，降低 Agent 编造风险。
+- 发布前机械质检 `python3 tools/check.py`：条号连续性、相对路径解析、data→references 引用有效性、URL 活性（本次发布四项全绿）。
+- 回答规范强制“引用条款 + 找不到就说找不到 + 动态信息给官方渠道”，降低 Agent 编造风险。
 - 仍可能有错漏：发现错误请提 Issue（见 CONTRIBUTING），我们会核对原书后修订。
 
 ## 版权与免责

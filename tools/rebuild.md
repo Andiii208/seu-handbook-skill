@@ -46,7 +46,10 @@ python3 tools/split_chunks.py     # 产出 v2/pages/pg-NNN.txt 与 v2/chunks/<do
 ## 4. 验收
 
 ```bash
-# 人工跑 tests/golden-qa.md 全部题目，3 个不同 agent 各跑一遍，通过后记录到回归表
+# 0. 机械质检（必须全绿）：条号连续性、相对路径解析、data→references 引用、URL 活性
+python3 tools/check.py            # 有网络；离线环境加 --skip-net
+
+# 1. 人工跑 tests/golden-qa.md 抽样题目（按发布后的目录结构，而非仓库外副本），通过后记录到回归表
 ```
 
 修订内容引用格式抽查：任取 10 条，`rg "第.条" references/` 与渲染图比对。
