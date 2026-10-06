@@ -1,0 +1,73 @@
+name: 材料投稿
+description: 提交你手上有的、学校官网查不到的东大本科相关文件（学院细则、培养方案、通知模板等）
+title: "[材料] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        把文件拖进本表单下方的附件区，或给可访问的链接（网盘、邮件、校内站点均可，请注明有效期）。
+        涉及他人的学号、电话、证件号、成绩等信息请先脱敏；涉密或限定扩散的材料请勿投稿。
+
+  - type: input
+    id: material-name
+    attributes:
+      label: 材料名称
+      description: 全称，与文件内容一致
+    validations:
+      required: true
+
+  - type: input
+    id: material-version
+    attributes:
+      label: 年份 / 版本
+      description: 印发或获取时间；能确认的话注明"未见更新"
+    validations:
+      required: true
+
+  - type: input
+    id: material-unit
+    attributes:
+      label: 涉及学院 / 单位
+      description: 校级材料就填"校级"
+    validations:
+      required: true
+
+  - type: input
+    id: material-source
+    attributes:
+      label: 来源
+      description: 哪个渠道拿到的：学院通知群、教务处网页、纸质件等
+    validations:
+      required: true
+
+  - type: textarea
+    id: material-use
+    attributes:
+      label: 大家会拿它查什么问题
+      description: 一句话说明用途，方便维护者写进检索说明
+    validations:
+      required: false
+
+  - type: textarea
+    id: material-notes
+    attributes:
+      label: 其他说明
+      description: 可选：投稿署名（GitHub ID 或匿名）、已核对到的最新版说明等
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        **脱敏与授权确认（提交前请确认以下三项）**
+
+  - type: checkboxes
+    id: material-confirm
+    attributes:
+      label: 确认项
+      options:
+        - label: 已删除或遮挡他人学号、电话、证件号、成绩单等个人信息
+        - label: 材料不涉密、未注明限定扩散范围
+        - label: 确认自己有权分享该材料
+    validations:
+      required: true

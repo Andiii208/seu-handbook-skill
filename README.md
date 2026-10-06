@@ -19,69 +19,9 @@
 | 办事情 | "办休学找谁、带什么表？""勤工助学多少钱一小时？""交流学分什么时候申请认定？" |
 | 找渠道 | "图书馆电话多少？""竞赛目录在哪查？""今年推免名额多少？"（只有手册没写的，都会引导到官方渠道，不编造） |
 
-## 普通同学：不会命令行也能用
-
-最常见的问题是**网页版/App 类 Agent**（ChatGPT、豆包、DeepSeek、文小言等）。两种用法，都不需要装任何东西：
-
-**用法一：上传知识包（推荐，答案最稳）**
-
-1. 下载 [pack/seu-handbook.md](pack/seu-handbook.md)（约 78KB 的单文件，含回答规范、检索索引、9 张数值速查表和官方渠道清单）；
-2. 在支持上传文件的 Agent 里上传这个文件，然后直接提问。
-
-**用法二：让 Agent 自己联网读仓库（零下载）**
-
-把下面这段 prompt 粘给 Agent，然后正常提问：
-
-```text
-我接下来会问东南大学本科生规章制度相关的问题。请严格按以下方式回答：
-1. 先读取 https://raw.githubusercontent.com/Andiii208/seu-handbook-skill/main/SKILL.md，按其中的"回答规范"执行；
-2. 数值问题读对应的 data/ 文件（SKILL.md"内容布局"一节列了文件名），条文问题按 references/00-index.md 的路由表到 references/ 下对应规章文件里找原文；
-3. 每条结论引用"《规章名》第X条"；手册没有的内容明确说没有，并到 sources.md 的官方渠道查，严禁编造条号、分值和名额；
-4. 结尾固定加一句："以上依据为 2025 版《东南大学大学生手册》（内容截至 2025 年 8 月版），具体执行以学校和主管部门当年文件为准。"
-现在开始，我的第一个问题是：
-```
-
-两种用法下，涉及"今年名额、当年通知、竞赛目录"这类动态信息时，Agent 都应告诉你"以学校/学院当年正式通知为准"并给出查询入口——手册里本来就没有这些。
-
-## 安装（命令行 Agent 用户）
-
-本 Skill 采用通用的 Agent Skill 目录结构（`SKILL.md` + 资源目录），可被主流本地 Agent 加载。
-
-**方式一：克隆到 Agent 的 skills 目录**
-
-```bash
-# Claude Code
-git clone https://github.com/Andiii208/seu-handbook-skill.git ~/.claude/skills/seu-handbook
-
-# ZCode（用户级）
-git clone https://github.com/Andiii208/seu-handbook-skill.git ~/.zcode/skills/seu-handbook
-
-# 其他 Agent：放入其 skills 目录即可；找不到目录时可把整个文件夹放进项目，让 Agent 读 SKILL.md
-```
-
-**方式二：放在项目里**
-
-```bash
-git clone https://github.com/Andiii208/seu-handbook-skill.git ./.seu-handbook-skill
-```
-
-然后在对话里让 Agent"读取 `./.seu-handbook-skill/SKILL.md` 并按其指引回答"。
-
-安装后在支持自动触发（description 匹配）的 Agent 中，直接提问即可；不支持的 Agent，说一句"用 seu-handbook skill"或让它先读 SKILL.md。
-
-**方式三：装到 ZCode 项目级 skills（只对当前项目生效，不进全局）**
-
-```bash
-cd <本仓库>                      # 仓库根目录
-mkdir -p .zcode/skills/seu-handbook
-tar --exclude='./.git' --exclude='./.zcode' -cf - . | (cd .zcode/skills/seu-handbook && tar -xf -)
-echo ".zcode/" >> .gitignore     # 安装副本不入库
-```
-
-仓库内容改完之后，重跑上面的 tar 两行即可同步（或用 `rsync -a --delete --exclude .git --exclude .zcode ./ .zcode/skills/seu-handbook/`）。
-注意：项目级 skill 在**会话启动时**扫描，装好后要新开一个会话（或重载窗口）才会被发现。
-
 ## 使用示例
+
+绝大部分本地 Agent 都能直接用：把本仓库克隆或下载到它的 skills 目录（或放进项目让它读 `SKILL.md`），然后正常提问即可，回答会带条款引用。
 
 ```
 问：我 5 个人组队做了个省级 SRTP 项目，结题是"良好"，能加多少研学分？
@@ -121,7 +61,7 @@ echo ".zcode/" >> .gitignore     # 安装副本不入库
 │   └── dorm-and-life.md
 ├── community/             # 同学投稿的手册外材料（官网不公开的文件：学院细则、培养方案、通知模板等）
 │   └── README.md          #   收录规则、目录约定、投稿方式
-├── pack/                  # 写给普通同学的单文件知识包（由 tools/make_pack.py 生成，勿手改）
+├── pack/                  # 单文件知识包（由 tools/make_pack.py 生成，勿手改）
 │   └── seu-handbook.md    #   回答规范 + 检索索引 + 9 张数据表 + 官方渠道，约 78KB
 ├── sources.md             # 官方信息源清单（"当年才变"的信息去哪儿查）
 ├── tools/                 # 维护者用：OCR 与年度再生产线、发布前质检、知识包生成
