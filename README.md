@@ -1,5 +1,10 @@
 # seu-handbook-skill
 
+<p align="center">
+  <img alt="Agent Skill" src="https://img.shields.io/badge/Agent-Skill-4FC08D?style=flat-square">
+  <img alt="local first" src="https://img.shields.io/badge/local--first-3178C6?style=flat-square">
+</p>
+
 把《东南大学大学生手册》变成一个可以装进本地 Agent 的 Skill：不用翻书、不用问同学，直接问 Agent"这事按规定怎么办"，答案带**条款引用**。
 
 - 内容来源：2025 年《东南大学大学生手册》（东南大学校长办公室编，2025 年 8 月）
