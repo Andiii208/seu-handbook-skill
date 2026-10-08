@@ -4,12 +4,26 @@
 检查项：
   1. 条号连续性：references/ 各规章文件 **第X条** 从 1 连续到最大条号，无重复；
      00-index/00-front-school-intro/18-zhuoyue/49-fuwu-zhinan 无条号属正常（白名单）。
-  2. 路径解析：所有文件中反引号包裹的相对路径（../ 或 ./ 开头）必须能解析到真实文件。
-  3. 引用有效性：data/ 里以 "NN-短名 第X条" 形式引用的规章文件与条号必须存在。
-  4. URL 活性：sources.md、references/49-fuwu-zhinan.md、data/*.md 中的 http(s) 链接
+  2. 末条完整性：references/ 各规章的末条应为"负责解释/自…施行"条款。末条不是，
+     通常是尾条被整条删掉了——第 1 项只查 1..max 内部缺号，尾条被删后 max 变小、
+     内部仍连续，查不出来。
+  3. 路径解析：所有文件中反引号包裹的相对路径（../ 或 ./ 开头）必须能解析到真实文件。
+  4. 引用有效性：data/ 里以 "NN-短名 第X条" 形式引用的规章文件与条号必须存在。
+  5. 引用内容一致：data/ 表格行正文中的数值必须能在所引条款原文中找到。第 4 项只验证
+     "第X条存在"；本项验证"这行的数值确实出自所引条款"——依据列漏列条款、数值抄错，
+     都在这里暴露。行内含 <!-- 数值另有出处 --> 时跳过。
+  6. URL 活性：sources.md、references/49-fuwu-zhinan.md、data/*.md 中的 http(s) 链接
      状态码异常时报告（--skip-net 跳过）；已在正文标注"实测不通/打不开/无法连接"的链接视为已知失效，只复核不报错。
-  5. 知识包同步：pack/seu-handbook.md 与 SKILL.md/data/sources/00-index 内容一致
+  7. 知识包同步：pack/seu-handbook.md 与 SKILL.md/data/sources/00-index 内容一致
      （不一致说明改了源忘了重新生成）。
+
+已知边界（不要据此认为"全绿=内容正确"）：
+  - 第 1、2 项管"条号齐全"，管不了**条内漏字漏句**。变异测试已验证：删掉末条、
+    依据列漏列条款都能被抓到；但把第二十八条里的"和安全教育要求"删掉这类
+    不含数值的条内删减，本工具查不出，仍须人工对照手册原书。
+  - 第 5 项只核对"数值是否在所引条款"，不判断数值用得对不对、口径全不全。
+  - 条号本身是否与手册一致（多号/少号/错号），需要 tools/rebuild.md 的年度更新流程
+    对着原书核对。
 """
 import os
 import re
@@ -41,8 +55,106 @@ def c2i(s):
         return CN[s[0]] * 10 + CN[s[2]]
     return None
 
+# references/ 各规章文件现有的条号集合（引用未指明条号时兜底用）
+REF_STEMS = {}
+for _p in glob.glob(os.path.join(ROOT, "references", "*.md")):
+    _t = open(_p, encoding="utf-8").read()
+    REF_STEMS[os.path.basename(_p)[:-3]] = {
+        v for v in (c2i(m) for m in
+                    re.findall(r"\*\*第([一二三四五六七八九十百零〇两]+)条\*\*", _t)) if v}
+
 def rel(p):
     return os.path.relpath(p, ROOT)
+
+STEM_RE = re.compile(r"(\d{2}-[a-z-]+)")
+CLAUSE_RE = re.compile(
+    r"第([一二三四五六七八九十百零〇两]+)"
+    r"(?:[、,，]\s*([一二三四五六七八九十百零〇两]+))*"
+    r"(?:\s*至\s*([一二三四五六七八九十百零〇两]+))?条")
+
+def expand_clauses(seg):
+    """把 "第X条"/"第X、Y、Z条"/"第X至Y条" 展开成条号数字集合。"""
+    out = set()
+    for m in CLAUSE_RE.finditer(seg):
+        for g in re.findall(r"[一二三四五六七八九十百零〇两]+", m.group(0)):
+            v = c2i(g)
+            if v:
+                out.add(v)
+        if m.group(3):
+            first, last = c2i(m.group(1)), c2i(m.group(3))
+            if first and last:
+                out.update(range(first, last + 1))
+    return out
+
+def clause_text(path, nums):
+    """取指定条号的正文（从 **第X条** 到下一条之前）。"""
+    txt = open(path, encoding="utf-8").read()
+    hits = [(m.start(), c2i(m.group(1))) for m in
+            re.finditer(r"\*\*第([一二三四五六七八九十百零〇两]+)条\*\*", txt)]
+    hits = [(p, n) for p, n in hits if n]
+    pieces = []
+    for i, (pos, n) in enumerate(hits):
+        if n not in nums:
+            continue
+        end = hits[i + 1][0] if i + 1 < len(hits) else len(txt)
+        pieces.append(txt[pos:end])
+    return "".join(pieces)
+
+# 表格行里必然出现的编号/年份，不代表正文数值
+NUM_DENY = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "100",
+            "2003", "2019", "2020", "2023", "2025", "2026"}
+TAIL_OK = re.compile(r"负责解释|授权[^。]{0,20}解释"
+                     r"|(?:自|從|从)[^。]{0,20}(?:施行|执行|实施|印发之日|公布之日)")
+
+def check_tail_article():
+    bad = 0
+    for f in sorted(glob.glob(os.path.join(ROOT, "references/*.md"))):
+        base = os.path.basename(f)
+        if base in NO_ARTICLE_FILES:
+            continue
+        txt = open(f, encoding="utf-8").read()
+        hits = [(m.start(), c2i(m.group(1))) for m in
+                re.finditer(r"\*\*第([一二三四五六七八九十百零〇两]+)条\*\*", txt)]
+        hits = [(p, n) for p, n in hits if n]
+        if not hits:
+            continue
+        pos, n = hits[-1]
+        if not TAIL_OK.search(txt[pos:]):
+            print(f"[末条] {base}: 末条为第{n}条，但内容不是解释/施行条款，"
+                  f"疑似尾条被整条删除——请对照手册原书核对"); bad += 1
+    return bad
+
+def check_citation_content():
+    bad = 0
+    for f in sorted(glob.glob(os.path.join(ROOT, "data/*.md"))):
+        r = rel(f)
+        for lineno, line in enumerate(open(f, encoding="utf-8"), 1):
+            if not line.lstrip().startswith("|"):
+                continue
+            if "数值另有出处" in line:
+                continue
+            cites = set()
+            for stem in set(STEM_RE.findall(line)):
+                if stem in NO_ARTICLE_FILES or stem not in REF_STEMS:
+                    continue
+                for seg in re.split(r"[；;]", line):
+                    if stem not in seg:
+                        continue
+                    nums = expand_clauses(seg)
+                    for n in (nums or REF_STEMS.get(stem, set())):
+                        cites.add((stem, n))
+            if not cites:
+                continue
+            body = re.sub(r"`[^`]*`", " ", STEM_RE.sub(" ", line))
+            for num in sorted({n for n in re.findall(r"\d+(?:\.\d+)?", body)
+                               if n not in NUM_DENY}):
+                if not any(num in clause_text(
+                        os.path.join(ROOT, "references", s + ".md"), {c})
+                        for s, c in cites):
+                    print(f"[引用内容] {r}:{lineno}: 数值 {num} 未出现在所引条款 "
+                          f"{sorted(cites)} 中——依据列漏列条款或数值有误")
+                    bad += 1
+    return bad
 
 def check_articles():
     bad = 0
@@ -143,8 +255,10 @@ def check_pack():
 def main():
     skip_net = "--skip-net" in sys.argv
     results = {"条号连续性": check_articles(),
+               "末条完整性": check_tail_article(),
                "路径解析": check_paths(),
                "引用有效性": check_citations(),
+               "引用内容一致": check_citation_content(),
                "知识包同步": check_pack()}
     if not skip_net:
         results["URL 活性"] = check_urls()
