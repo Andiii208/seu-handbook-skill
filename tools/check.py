@@ -21,7 +21,10 @@
   - 第 1、2 项管"条号齐全"，管不了**条内漏字漏句**。变异测试已验证：删掉末条、
     依据列漏列条款都能被抓到；但把第二十八条里的"和安全教育要求"删掉这类
     不含数值的条内删减，本工具查不出，仍须人工对照手册原书。
-  - 第 5 项只核对"数值是否在所引条款"，不判断数值用得对不对、口径全不全。
+  - 第 5 项只核对"数值是否在所引条款"，**不判断数值用得对不对、位置对不对**。
+    变异测试已验证：绩点 3.8→3.9、SCI 12→14 能被抓到；但把 SRTP 良好档的
+    系数 0.5 改成 0.6（0.6 在同一条款的竞赛倍数里也存在）会漏过。要查"这一格
+    对应原文哪一句"，仍须人工。
   - 条号本身是否与手册一致（多号/少号/错号），需要 tools/rebuild.md 的年度更新流程
     对着原书核对。
 """
@@ -66,7 +69,7 @@ for _p in glob.glob(os.path.join(ROOT, "references", "*.md")):
 def rel(p):
     return os.path.relpath(p, ROOT)
 
-STEM_RE = re.compile(r"(\d{2}-[a-z-]+)")
+STEM_RE = re.compile(r"(\d{2}-[a-z-]+|appendix-[a-z]+-\d+)")
 CLAUSE_RE = re.compile(
     r"第([一二三四五六七八九十百零〇两]+)"
     r"(?:[、,，]\s*([一二三四五六七八九十百零〇两]+))*"
@@ -125,36 +128,60 @@ def check_tail_article():
     return bad
 
 def check_citation_content():
+    """表格行正文中的数值必须能在所引条款原文中找到。
+
+    依据来源有两级：行内自己的"依据"列优先；行内没有时，继承该表格上方
+    最近的"依据：…"小节级说明。行内含 <!-- 数值另有出处 --> 可跳过。
+    """
     bad = 0
     for f in sorted(glob.glob(os.path.join(ROOT, "data/*.md"))):
         r = rel(f)
+        section = set()
         for lineno, line in enumerate(open(f, encoding="utf-8"), 1):
+            if line.lstrip().startswith("#"):
+                section = set()
+            elif "依据" in line and not line.lstrip().startswith("|"):
+                section = cites_in(line)
             if not line.lstrip().startswith("|"):
                 continue
             if "数值另有出处" in line:
                 continue
-            cites = set()
-            for stem in set(STEM_RE.findall(line)):
-                if stem in NO_ARTICLE_FILES or stem not in REF_STEMS:
-                    continue
-                for seg in re.split(r"[；;]", line):
-                    if stem not in seg:
-                        continue
-                    nums = expand_clauses(seg)
-                    for n in (nums or REF_STEMS.get(stem, set())):
-                        cites.add((stem, n))
+            cites = cites_in(line) or section
             if not cites:
                 continue
             body = re.sub(r"`[^`]*`", " ", STEM_RE.sub(" ", line))
+            # 文号（教育部令第41号、校通知〔2008〕161号）不是正文数值
+            body = re.sub(r"第?\s*\d+\s*号令", " ", body)
+            body = re.sub(r"[〔\[［][^〕\]］]*[〕\]］]\s*\d*\s*号", " ", body)
             for num in sorted({n for n in re.findall(r"\d+(?:\.\d+)?", body)
                                if n not in NUM_DENY}):
                 if not any(num in clause_text(
                         os.path.join(ROOT, "references", s + ".md"), {c})
                         for s, c in cites):
+                    where = ",".join(f"{s}({len([1 for st, _ in cites if st == s])}条)"
+                                     for s in sorted({s for s, _ in cites}))
                     print(f"[引用内容] {r}:{lineno}: 数值 {num} 未出现在所引条款 "
-                          f"{sorted(cites)} 中——依据列漏列条款或数值有误")
+                          f"{where} 中——依据列漏列条款或数值有误")
                     bad += 1
     return bad
+
+def cites_in(text):
+    """从一段文字里取出 (规章文件, 条号) 引用集合。
+
+    每个文件名只认它自己到下一个文件名之间的那段文字，避免把后一个规章的
+    条号算到前一个头上；该段没有指明条号时，取该文件全部条号兜底。
+    """
+    cites = set()
+    hits = list(STEM_RE.finditer(text))
+    for i, m in enumerate(hits):
+        stem = m.group(1)
+        if stem in NO_ARTICLE_FILES or stem not in REF_STEMS:
+            continue
+        end = hits[i + 1].start() if i + 1 < len(hits) else len(text)
+        nums = expand_clauses(text[m.end():end])
+        for n in (nums or REF_STEMS[stem]):
+            cites.add((stem, n))
+    return cites
 
 def check_articles():
     bad = 0
