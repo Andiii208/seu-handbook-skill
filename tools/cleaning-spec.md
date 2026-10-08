@@ -2,7 +2,7 @@
 
 ## 任务
 把 `/tmp/seu_hb/v2/chunks/<docid>.txt` 中的 OCR 文本清洗、结构化，写成
-`/Users/xuyijia/dev/seu skill/references/<docid>.md`。
+`references/<docid>.md`（相对仓库根目录）。
 
 输入是"先左栏后右栏"阅读序的 OCR 文本（每个 PDF 页 = 手册两个页码的横展，
 左栏=偶数手册页，右栏=奇数手册页）。chunk 文件里会混入**上一篇的结尾**和**下一篇的开头**，
@@ -48,7 +48,7 @@ topics: [5-10 个中文主题词]
 - 无残留 OCR 错字、无页码脚注、无相邻规章的溢出文字；
 - 表格与渲染图一致；
 - frontmatter 各字段已填；
-- 产出文件即 `/Users/xuyijia/dev/seu skill/references/<docid>.md`，用 Write 工具创建。
+- 产出文件即 `references/<docid>.md`，用 Write 工具创建。
 
 ## 范例
-`/Users/xuyijia/dev/seu skill/references/01-xueji.md` 就是按本规范完成的标准样例，先读它再开工。
+`references/01-xueji.md` 就是按本规范完成的标准样例，先读它再开工。

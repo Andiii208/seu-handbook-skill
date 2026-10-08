@@ -2,8 +2,9 @@
 """生成单文件知识包 pack/seu-handbook.md（供网页/App 类 Agent 上传使用）。
 
 内容 = SKILL.md（回答规范）+ references/00-index.md（检索索引）
-       + data/*.md（9 张数值速查表）+ sources.md（官方渠道清单）。
-references/ 下 52 个规章条文原文不进包：体积大且只在一部分问题中用到，
+       + data/*.md（9 张数值速查表 + glossary.md 口语词对照表）+ sources.md（官方渠道清单）。
+references/ 下 52 个文件（48 个校级规章 + 教育部令第 41 号附录 + 服务指南 + 卷首 + 索引）
+的条文原文不进包：体积大且只在一部分问题中用到，
 需要时由 Agent 按文件联网到仓库 references/ 调取。
 
 用法：python3 tools/make_pack.py
@@ -21,7 +22,8 @@ PARTS = [
     ("references/00-index.md", "检索索引与路由"),
     ("sources.md", "官方渠道清单"),
 ] + [(os.path.relpath(p, ROOT).replace(os.sep, "/"),
-      "数值速查表 · " + os.path.basename(p)[:-3])
+      ("口语词对照表 · " if os.path.basename(p) == "glossary.md"
+       else "数值速查表 · ") + os.path.basename(p)[:-3])
      for p in sorted(glob.glob(os.path.join(ROOT, "data/*.md")))]
 
 HEADER = """# 东南大学大学生手册 · Skill 知识包（单文件版）
@@ -33,8 +35,8 @@ HEADER = """# 东南大学大学生手册 · Skill 知识包（单文件版）
 > “我绩点 3.2，能评三好学生吗？”“5 人团队省级 SRTP 结题良好能加多少研学分？”
 > Agent 应按下方“Skill 回答规范”作答并引用条款。
 >
-> **内容边界**：本包含回答规范、检索索引、9 张数值速查表、官方渠道清单；
-> 52 个规章的条文原文不在包内。需要条文原文时，请让 Agent 联网到
+> **内容边界**：本包含回答规范、检索索引、9 张数值速查表与口语词对照表、官方渠道清单；
+> references/ 下 52 个文件（48 个校级规章 + 教育部令附录 + 服务指南 + 卷首 + 索引）的条文原文不在包内。需要条文原文时，请让 Agent 联网到
 > GitHub 仓库 `Andiii208/seu-handbook-skill` 的 `references/` 目录，
 > 按下方索引中的文件名（如 `14-xuefenzhi.md`）调取对应文件。
 
@@ -53,8 +55,8 @@ def _strip_frontmatter(text):
 def build():
     parts = [HEADER]
     for path, label in PARTS:
-        body = _strip_frontmatter(open(os.path.join(ROOT, path),
-                                       encoding="utf-8").read().strip())
+        with open(os.path.join(ROOT, path), encoding="utf-8") as f:
+            body = _strip_frontmatter(f.read().strip())
         parts.append(f"\n\n<!-- ===== {path} · {label} ===== -->\n\n{body}\n")
     return "".join(parts), PARTS
 
