@@ -8,7 +8,7 @@
 把《东南大学大学生手册》变成一个可以装进本地 Agent 的 Skill：不用翻书、不用问同学，直接问 Agent"这事按规定怎么办"，答案带**条款引用**。
 
 - 内容来源：2025 年《东南大学大学生手册》（东南大学校长办公室编，2025 年 8 月）
-- 覆盖范围：48 个校级规章全文 +《普通高等学校学生管理规定》（教育部令第 41 号）+ 服务指南（部门电话/网址）+ 9 张高频数值速查表
+- 覆盖范围：48 个校级规章全文 +《普通高等学校学生管理规定》（教育部令第 41 号）+ 服务指南（部门电话/网址）+ 9 张高频数值速查表 + 口语词对照表
 - 性质：**学生自发的整理汇编，非官方发布**。条文权利归东南大学；执行以学校正式文件和当年通知为准
 - 后续方向：**做成东大本科生的规章制度百科全书**——手册只是起点，欢迎同学把官网不公开的文件投进来（见下文"后续方向"一节）
 
@@ -60,26 +60,31 @@
 │   ├── appendix-moe-41.md #   教育部令第 41 号
 │   ├── 49-fuwu-zhinan.md  #   服务指南（部门电话/网址）
 │   └── 00-front-school-intro.md
-├── data/                  # 高频数值速查表（9 张）
+├── data/                  # 高频数值速查表（9 张）+ 口语词对照表（1 个）
 │   ├── gpa-table.md  research-scores.md  social-practice.md  competitions.md
 │   ├── scholarships.md  honors.md  discipline.md  academic-progress.md
-│   └── dorm-and-life.md
+│   ├── dorm-and-life.md
+│   └── glossary.md      #   口语词 → 手册规范术语（检索前先对词）
 ├── community/             # 同学投稿的手册外材料（官网不公开的文件：学院细则、培养方案、通知模板等）
 │   └── README.md          #   收录规则、目录约定、投稿方式
 ├── pack/                  # 单文件知识包（由 tools/make_pack.py 生成，勿手改）
-│   └── seu-handbook.md    #   回答规范 + 检索索引 + 9 张数据表 + 官方渠道，约 78KB
+│   └── seu-handbook.md    #   回答规范 + 检索索引 + 9 张数据表 + 口语词表 + 官方渠道
 ├── sources.md             # 官方信息源清单（"当年才变"的信息去哪儿查）
 ├── tools/                 # 维护者用：OCR 与年度再生产线、发布前质检、知识包生成
-│   ├── check.py           #   发布前必跑：条号/路径/引用/知识包同步/URL 活性
+│   ├── check.py           #   发布前必跑：条号/末条/路径/引用存在性/引用内容/知识包同步/URL 活性
+│   │                       #   `--cov` 统计金标准题的规章覆盖；`--skip-net` 跳过联网检查
 │   └── make_pack.py       #   重新生成 pack/seu-handbook.md
-└── tests/golden-qa.md     # 验收用金标准题
+├── tests/                 # 验收用：金标准题 + 知识包生成回归测试
+│   ├── golden-qa.md       #   67 题，按题记结果到 regression-notes.md
+│   ├── test_make_pack.py  #   知识包生成与检出目录无关（unittest）
+│   └── regression-notes.md
 ```
 
 ## 可靠性说明
 
 - 手册原版为无文字层图片 PDF，本仓库文本由 OCR（macOS Vision，离线）识别后逐篇清洗，**所有数值表与渲染图逐值人工核对**（清单见 `tools/verify-checklist.md`）。
 - 每个规章文件头部记录了手册页码、执行年级、解释单位，便于回溯原书。
-- 发布前机械质检 `python3 tools/check.py`：条号连续性、相对路径解析、data→references 引用有效性、URL 活性（本次发布四项全绿）。
+- 发布前机械质检 `python3 tools/check.py`（六项：条号连续性、末条完整性、相对路径解析、引用存在性、**引用内容一致**、知识包同步；加网络再查 URL 活性）。**"全绿"不等于内容正确**——它查不出条内漏字漏句，也判断不了数值用得对不对；这两类仍需人工对照手册原书。已做边界与变异测试，见 `tools/check.py` docstring。
 - 回答规范强制“引用条款 + 找不到就说找不到 + 动态信息给官方渠道”，降低 Agent 编造风险。
 - 仍可能有错漏：发现错误请提 Issue（见 CONTRIBUTING），我们会核对原书后修订。
 

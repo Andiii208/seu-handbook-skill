@@ -279,8 +279,33 @@ def check_pack():
     return 0
 
 
+def check_coverage():
+    """统计 tests/golden-qa.md 的规章覆盖。只数表格行里的 NN-短名。
+
+    散文里出现的规章名（如"零覆盖清单"）不计入，否则统计自我循环。
+    这是信息项，不计入退出码。
+    """
+    txt = open(os.path.join(ROOT, "tests/golden-qa.md"), encoding="utf-8").read()
+    cited = set(STEM_RE.findall("\n".join(
+        l for l in txt.splitlines() if l.lstrip().startswith("|"))))
+    school = {os.path.basename(p)[:-3] for p in
+              glob.glob(os.path.join(ROOT, "references/[0-9][0-9]-*.md"))
+              if not os.path.basename(p).startswith("00-")}
+    missing = sorted(school - cited)
+    extra = sorted(cited - school)
+    print(f"[覆盖] 48 个校级规章中 golden-qa 引用 {len(school) - len(missing)} 个，"
+          f"零覆盖 {len(missing)} 个：{'、'.join(missing) or '无'}")
+    if extra:
+        print(f"[覆盖] golden-qa 引用了不存在的规章文件：{'、'.join(extra)}")
+        return 1
+    return 0
+
+
 def main():
     skip_net = "--skip-net" in sys.argv
+    only_cov = "--cov" in sys.argv
+    if only_cov:
+        return check_coverage()
     results = {"条号连续性": check_articles(),
                "末条完整性": check_tail_article(),
                "路径解析": check_paths(),
@@ -289,6 +314,8 @@ def main():
                "知识包同步": check_pack()}
     if not skip_net:
         results["URL 活性"] = check_urls()
+    if "--with-cov" in sys.argv:
+        results["金标准覆盖"] = check_coverage()
     for k, v in results.items():
         print(f"{'✗' if v else '✓'} {k}: {v} 个问题")
     return 1 if any(results.values()) else 0
