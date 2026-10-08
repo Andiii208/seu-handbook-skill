@@ -108,6 +108,9 @@ NUM_DENY = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "100",
             "2003", "2019", "2020", "2023", "2025", "2026"}
 TAIL_OK = re.compile(r"负责解释|授权[^。]{0,20}解释"
                      r"|(?:自|從|从)[^。]{0,20}(?:施行|执行|实施|印发之日|公布之日)")
+# 带查询串的 URL（如 shields.io 徽章 ?style=flat-square）也要整条取到，
+# 否则查的是被截断的地址，稳定的链接会被误报为失效
+URL_RE = r"https?://[a-zA-Z0-9./_%?=&:+~-]+"
 
 def check_tail_article():
     bad = 0
@@ -243,13 +246,12 @@ def check_urls():
         for f in glob.glob(os.path.join(ROOT, pat)):
             for line in open(f, encoding="utf-8"):
                 if re.search(r"实测(不通|打不开|无法连接)", line):
-                    known_bad.update(re.findall(r"https?://[a-zA-Z0-9./_-]+", line))
+                    known_bad.update(re.findall(URL_RE, line))
     urls = set()
     for pat in ("sources.md", "README.md", "SKILL.md",
                 "references/49-fuwu-zhinan.md", "data/*.md"):
         for f in glob.glob(os.path.join(ROOT, pat)):
-            urls.update(re.findall(r"https?://[a-zA-Z0-9./_-]+",
-                                   open(f, encoding="utf-8").read()))
+            urls.update(re.findall(URL_RE, open(f, encoding="utf-8").read()))
     bad = 0
     for u in sorted(urls):
         try:
