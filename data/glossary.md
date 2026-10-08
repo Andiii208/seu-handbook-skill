@@ -1,7 +1,7 @@
 # 学生口语说法 → 手册规范术语映射表
 
 > 用途：同学提问用的是口语，手册用的是规范术语。**先在本表把口语词换成规范术语，再去 references/ 或 data/ 检索**——直接拿口语词 grep 全文经常搜不到，容易答偏或编造。
-> 本表只做"对词"，规则本身以 `references/` 原文和 `data/` 表为准；手册未收录的内容（如综合素质测评办法原文）见 `sources.md` 对应渠道。
+> 本表只做"对词"，规则本身以 `references/` 原文和 `data/` 表为准；手册未收录的内容（如综合素质测评办法原文）见 `references/00-index.md` 第六节"手册引用但未收录的文件"清单。
 
 ## 一、学业与成绩
 
@@ -17,13 +17,16 @@
 | 延毕、晚毕业 | 延长学习年限 | `references/11-yanchang.md` |
 | 提前毕业 | 提前毕业（学费少收一年/半年） | `references/45-shoufei.md`、`01-xueji.md` |
 | 肄业、结业 | 结业、肄业（换毕业证办法） | `references/01-xueji.md` |
+| 清考 | **东大无"毕业前清考"制度**：补考仅限当学期首修不及格一次，之后只能重修；直接回答"没有清考" | `references/01-xueji.md` 第十条 |
+| 蹲班、留级 | 复学后编入原专业下一年级（与"延长学习年限"不是一回事），按复学就读年级收费标准缴费 | `references/01-xueji.md` 第二十五条 |
+| 退学试读 | 退学试读（收到退学警告后 10 日内申请，一学期，仅一次机会） | `references/01-xueji.md` 第二十六条 |
 
 ## 二、加分与综合素质
 
 | 学生常说 | 手册规范术语 | 去哪查 |
 |---|---|---|
 | 加分、研学分、创新学分 | 课外研学成绩（课外研学学分，毕业须修满 2 学分） | `data/research-scores.md`、`references/21-yanxue.md` |
-| 综测、综合分、素质分 | 《东南大学本科生综合素质测评办法》——**原文手册未收录**，向学院/学生处查询 | `sources.md` |
+| 综测、综合分、素质分 | 《东南大学本科生综合素质测评办法》——**原文手册未收录**，向学院/学生处查询 | `references/00-index.md` 第六节 |
 | 大创、大创项目 | SRTP（大学生创新创业项目） | `data/research-scores.md`、`references/21-yanxue.md` |
 | 打比赛、竞赛 | 学科竞赛（A+/A/B/C 分类，目录在线维护不在手册） | `data/competitions.md`、`references/23-jingsai.md` |
 | 发论文、专利、软著 | 发表论文/专利授权（第一署名单位须为东南大学） | `data/research-scores.md`、`references/21-yanxue.md` |
@@ -35,6 +38,7 @@
 | 学生常说 | 手册规范术语 | 去哪查 |
 |---|---|---|
 | 保研、推免、免研 | 推荐优秀应届本科毕业生免试攻读研究生（简称"推免"） | `references/10-tuimian.md`、`data/academic-progress.md` |
+| 直博、本硕博 | 强基计划本硕博衔接培养、转段考核（非推免渠道；退出强基后原则上不得再转专业、不再具有免试攻读研究生资格） | `references/13-qiangji.md` |
 | 三好、评三好 | 三好学生评选 | `references/30-sanhao.md`、`data/honors.md` |
 | 标兵 | 三好学生标兵 | `references/30-sanhao.md`、`data/honors.md` |
 | 优干、学生干部奖 | 优秀学生干部 | `references/30-sanhao.md`、`data/honors.md` |
@@ -64,7 +68,9 @@
 | 宿舍、公寓 | 学生公寓 | `references/41-gongyu.md`、`data/dorm-and-life.md` |
 | 熄灯、门禁、晚归 | 门禁制度与熄灯时间 | `references/41-gongyu.md` 第二十四条 |
 | 违章电器、吹风机、热得快 | 宿舍违章电器（800W 以上；吹风机、热水壶除外） | `references/41-gongyu.md`、`data/dorm-and-life.md` |
-| 翻墙、VPN、梯子 | 校园网络系统安全管理制度 | `references/44-wangluo.md` |
+| 翻墙、VPN、梯子 | 校园网络系统安全管理制度 | `references/44-wangluo.md`、`data/dorm-and-life.md` |
+| 校团委刊物、办报刊 | 学生出版物管理（需申报审批；社团刊物每年十月重新登记） | `references/43-chubanwu.md`、`data/dorm-and-life.md` |
+| 交流、交换、支教保研 | 公派交流学习（累计不超过一年；擅自放弃名额两年内不得再参加公派项目） | `references/19-gongpai.md`、`data/academic-progress.md` |
 | 跑操、校园跑、跑步打卡 | 跑步锻炼（一二年级每学期 45 次合格） | `references/16-tiyu.md`、`data/dorm-and-life.md` |
 | 体测、体质测试 | 《国家学生体质健康标准》达标测试（综评 ≥50；评分细则不在手册） | `references/16-tiyu.md` |
 | 补办学生证、补校园卡 | 学生证件补办 | `references/40-zhengjian.md` |
