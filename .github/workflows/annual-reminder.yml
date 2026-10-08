@@ -39,17 +39,21 @@ jobs:
               if (!/Already exists/.test(e.message)) throw e;
             }
             const year = new Date().getFullYear();
+            // issue 正文用数组拼接而非模板字面量：块内的模板字面量必须整体缩进，
+            // 缩进会被 YAML 保留，导致 Markdown 把整段渲染成代码块。
+            const checklist = [
+              '学校每年 8—9 月印发新版《大学生手册》。请按以下清单核对：',
+              '',
+              '1. 到教务处下载专区-学籍专区（<https://jwc.seu.edu.cn/xjk/list.htm>）确认是否已发布 ' + year + ' 版；',
+              '2. 若已发布，按 `tools/rebuild.md` 流程再生产：OCR → 清洗 → 数值表逐值对图 → 更新 references/ 与 data/ → `python3 tools/check.py` 全绿 → 重跑 tests/golden-qa.md 并记录到 regression-notes.md；',
+              '3. 更新版本声明三处：SKILL.md 版本横幅、README、pack（重新运行 `python3 tools/make_pack.py`）。',
+              '',
+              '当年不更新的话，直接关闭本 issue 并注明原因即可。',
+            ].join('\n');
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: `年度提醒：${year} 版《大学生手册》可能已发布，请核对并更新`,
               labels: ["annual-reminder"],
-              body:
-`学校每年 8—9 月印发新版《大学生手册》。请按以下清单核对：
-
-1. 到教务处下载专区-学籍专区（<https://jwc.seu.edu.cn/xjk/list.htm>）确认是否已发布 ${year} 版；
-2. 若已发布，按 \`tools/rebuild.md\` 流程再生产：OCR → 清洗 → 数值表逐值对图 → 更新 references/ 与 data/ → \`python3 tools/check.py\` 全绿 → 重跑 tests/golden-qa.md 并记录到 regression-notes.md；
-3. 更新版本声明三处：SKILL.md 版本横幅、README、pack（重新运行 \`python3 tools/make_pack.py\`）。
-
-当年不更新的话，直接关闭本 issue 并注明原因即可。`,
+              body: checklist,
             });
