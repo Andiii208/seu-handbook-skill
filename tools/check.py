@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""发布前质检。用法：python3 tools/check.py [--skip-net]
+"""发布前质检。用法：python3 tools/check.py [--skip-net] [--cov] [--with-cov]
 
 检查项：
+  0. 表格结构：同一张 Markdown 表内列数一致（抓"给某行加列时多写一个竖线"）。
   1. 条号连续性：references/ 各规章文件 **第X条** 从 1 连续到最大条号，无重复；
      00-index/00-front-school-intro/18-zhuoyue/49-fuwu-zhinan 无条号属正常（白名单）。
   2. 末条完整性：references/ 各规章的末条应为"负责解释/自…施行"条款。末条不是，
@@ -11,11 +12,13 @@
   4. 引用有效性：data/ 里以 "NN-短名 第X条" 形式引用的规章文件与条号必须存在。
   5. 引用内容一致：data/ 表格行正文中的数值必须能在所引条款原文中找到。第 4 项只验证
      "第X条存在"；本项验证"这行的数值确实出自所引条款"——依据列漏列条款、数值抄错，
-     都在这里暴露。行内含 <!-- 数值另有出处 --> 时跳过。
+     都在这里暴露。行内含 <!-- 数值另有出处 --> 可跳过。
   6. URL 活性：sources.md、references/49-fuwu-zhinan.md、data/*.md 中的 http(s) 链接
      状态码异常时报告（--skip-net 跳过）；已在正文标注"实测不通/打不开/无法连接"的链接视为已知失效，只复核不报错。
   7. 知识包同步：pack/seu-handbook.md 与 SKILL.md/data/sources/00-index 内容一致
      （不一致说明改了源忘了重新生成）。
+
+附：`--cov` 只跑金标准题覆盖统计；`--with-cov` 把它并入常规输出。
 
 已知边界（不要据此认为"全绿=内容正确"）：
   - 第 1、2 项管"条号齐全"，管不了**条内漏字漏句**。变异测试已验证：删掉末条、
@@ -31,6 +34,9 @@
     最长学习年限漏 11-yanchang 第六条、glossary 清考漏 14-xuefenzhi 第十八条）；
     剩余 3 处为"一二年级"这类"一、二年级"的合法简称，属误报。要把它做成硬门禁
     需处理中文简称，收益不抵维护成本，故未纳入。
+  - 第 5 项查不出**语义反了但数字都对**的表述。实例：研学成绩边界说明曾把
+    "3 分、4 分归入其后一档"写成"2 分、3 分、4 分归入其后一档"，2 分于是被从
+    "及格"错成"中等"——所有数字都在所引条款里出现过，机械检查全绿。
   - 条号本身是否与手册一致（多号/少号/错号），需要 tools/rebuild.md 的年度更新流程
     对着原书核对。
 """
@@ -309,6 +315,31 @@ def check_coverage():
     return 0
 
 
+def check_tables():
+    """Markdown 表格同一张表内列数必须一致。
+
+    这张检查抓到的都是真实事故：给某一行加"依据"列时多写了一个竖线，
+    整张表的列数就变了，渲染时该行会错位。
+    """
+    bad = 0
+    for f in sorted(glob.glob(os.path.join(ROOT, "**/*.md"), recursive=True)):
+        r = rel(f)
+        if r.startswith(os.path.join(".zcode") + os.sep) or PLAN_WORKING.search(r):
+            continue
+        expected = None
+        for lineno, line in enumerate(open(f, encoding="utf-8"), 1):
+            if line.startswith("|"):
+                n = len(line.strip().strip("|").split("|"))
+                if line.startswith("| #") or line.startswith("|---"):
+                    expected = n
+                elif expected is not None and n != expected:
+                    print(f"[表格] {r}:{lineno}: {n} 列，同表其他行为 {expected} 列")
+                    bad += 1
+            elif not line.strip():
+                expected = None
+    return bad
+
+
 def main():
     skip_net = "--skip-net" in sys.argv
     only_cov = "--cov" in sys.argv
@@ -319,6 +350,7 @@ def main():
                "路径解析": check_paths(),
                "引用有效性": check_citations(),
                "引用内容一致": check_citation_content(),
+               "表格结构": check_tables(),
                "知识包同步": check_pack()}
     if not skip_net:
         results["URL 活性"] = check_urls()
