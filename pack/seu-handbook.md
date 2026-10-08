@@ -236,7 +236,7 @@
 **作答纪律**：以上动态信息一律不得凭记忆编造；查不到就明确告知"以学校当年正式通知为准"，并给出查询入口。
 
 
-<!-- ===== /Users/xuyijia/dev/seu skill/data/academic-progress.md · 数值速查表 · academic-progress ===== -->
+<!-- ===== data/academic-progress.md · 数值速查表 · academic-progress ===== -->
 
 # 学业关键规则与红线速查表
 
@@ -329,7 +329,7 @@
 - 交流学习每学期至少完成对方高校对应培养方案不少于 15 学分课程学习（毕业班除外），"及格/通过"以上方可认定学分。
 
 
-<!-- ===== /Users/xuyijia/dev/seu skill/data/competitions.md · 数值速查表 · competitions ===== -->
+<!-- ===== data/competitions.md · 数值速查表 · competitions ===== -->
 
 # 学科竞赛规则速查表
 
@@ -385,7 +385,7 @@
 - 竞赛牵头学院按《东南大学院系单位关键业绩指标（KPI）综合考核与评价实施办法》获得相应年终绩效核算指标。
 
 
-<!-- ===== /Users/xuyijia/dev/seu skill/data/discipline.md · 数值速查表 · discipline ===== -->
+<!-- ===== data/discipline.md · 数值速查表 · discipline ===== -->
 
 # 违纪处分与申诉速查表
 
@@ -457,7 +457,7 @@
 - 非全日制学生、少数民族预科生的违纪处分参照《东南大学学生违纪处分条例》执行。
 
 
-<!-- ===== /Users/xuyijia/dev/seu skill/data/dorm-and-life.md · 数值速查表 · dorm-and-life ===== -->
+<!-- ===== data/dorm-and-life.md · 数值速查表 · dorm-and-life ===== -->
 
 # 校园生活高频规则速查表
 
@@ -571,7 +571,7 @@
 - 赴国（境）外期间医疗费用按国家公费医疗管理规定不予报销，出境前需办理相关保险。
 
 
-<!-- ===== /Users/xuyijia/dev/seu skill/data/glossary.md · 数值速查表 · glossary ===== -->
+<!-- ===== data/glossary.md · 数值速查表 · glossary ===== -->
 
 # 学生口语说法 → 手册规范术语映射表
 
@@ -654,7 +654,7 @@
 | 辅修、双学位、二专业 | 辅修专业 / 辅修学士学位 | `references/06-fuxiu.md` |
 
 
-<!-- ===== /Users/xuyijia/dev/seu skill/data/gpa-table.md · 数值速查表 · gpa-table ===== -->
+<!-- ===== data/gpa-table.md · 数值速查表 · gpa-table ===== -->
 
 # 成绩等级与学分绩点对应表
 
@@ -706,7 +706,7 @@
 注意：补考、重修成绩不参与校长奖、课程奖评选，也不参与免研排名、评优排名等选拔优秀类排名（学籍管理规定第十条）。
 
 
-<!-- ===== /Users/xuyijia/dev/seu skill/data/honors.md · 数值速查表 · honors ===== -->
+<!-- ===== data/honors.md · 数值速查表 · honors ===== -->
 
 # 荣誉称号评选速查表
 
@@ -735,7 +735,7 @@
 - 荣誉称号及奖学金获得情况记入学生档案；学校鼓励各学院在评选中尽可能扩大学生受奖面。
 
 
-<!-- ===== /Users/xuyijia/dev/seu skill/data/research-scores.md · 数值速查表 · research-scores ===== -->
+<!-- ===== data/research-scores.md · 数值速查表 · research-scores ===== -->
 
 # 课外研学加分与成绩速查表
 
@@ -841,7 +841,7 @@
 - 认定渠道：SRTP 走大学生创新创业项目管理系统、竞赛走学科竞赛管理系统、论文专利/讲座/创业走课外研学成绩管理系统，均需在系统内提交材料。
 
 
-<!-- ===== /Users/xuyijia/dev/seu skill/data/scholarships.md · 数值速查表 · scholarships ===== -->
+<!-- ===== data/scholarships.md · 数值速查表 · scholarships ===== -->
 
 # 奖学金与助学金速查表
 
@@ -898,7 +898,7 @@
 - 受助学生因违法违纪受处分，或发现弄虚作假、奢侈浪费等行为的，取消受助和评优资格。
 
 
-<!-- ===== /Users/xuyijia/dev/seu skill/data/social-practice.md · 数值速查表 · social-practice ===== -->
+<!-- ===== data/social-practice.md · 数值速查表 · social-practice ===== -->
 
 # 社会实践学分与分值速查表
 

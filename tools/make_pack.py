@@ -20,7 +20,8 @@ PARTS = [
     ("SKILL.md", "Skill 回答规范"),
     ("references/00-index.md", "检索索引与路由"),
     ("sources.md", "官方渠道清单"),
-] + [(p, "数值速查表 · " + os.path.basename(p)[:-3])
+] + [(os.path.relpath(p, ROOT).replace(os.sep, "/"),
+      "数值速查表 · " + os.path.basename(p)[:-3])
      for p in sorted(glob.glob(os.path.join(ROOT, "data/*.md")))]
 
 HEADER = """# 东南大学大学生手册 · Skill 知识包（单文件版）
