@@ -11,7 +11,7 @@ community/
 └── <主题>/                      # 小写英文连字符，如 tuimian-xize、peiyang-fangan
     └── <材料名>/                # 建议 <单位>-<材料>-<年份>，如 cs-tuimian-xize-2025
         ├── README.md           # 必填：来源、年份、适用范围等（字段见下表）
-        └── <材料文件>           # .md/.txt 优先；PDF、图片原样保留
+        └── <材料文件>           # .md/.txt 转写优先；原件可保留，亦可只留转写
 ```
 
 ## 每份材料必填的 README 字段
@@ -28,7 +28,18 @@ community/
 
 ## 材料清单
 
-（暂无。投稿方式见仓库根目录的 [CONTRIBUTING.md](../CONTRIBUTING.md)；不想走命令行，直接用 GitHub 的"材料投稿" issue 模板贴文件或链接。）
+| 主题 | 材料 | 年份/版本 | 适用范围 | 目录 |
+|---|---|---|---|---|
+| 专业培养方案 | 化学工程与工艺专业培养方案 | 2021 级 | 化学工程与工艺 2021 级 | [peiyang-fangan/seu-chemeng-peiyang-fangan-2021](peiyang-fangan/seu-chemeng-peiyang-fangan-2021/) |
+| 专业培养方案 | 化学（强基计划）专业培养方案 | 2025 级 | 化学（强基计划）2025 级 | [peiyang-fangan/seu-chem-qiangji-peiyang-fangan-2025](peiyang-fangan/seu-chem-qiangji-peiyang-fangan-2025/) |
+| 推免细则 | 2025 届推免推荐基本条件 | 2025 届 | 2025 届应届本科毕业生 | [tuimian-xize/seu-tuimian-jiben-tiaojian-2025](tuimian-xize/seu-tuimian-jiben-tiaojian-2025/) |
+| 劳动教育 | 劳动教育与实践课程导学 | 2026-2027 学年度 | 全校本科生 | [laodong-jiaoyu/seu-laodong-kecheng-daoxue-2026](laodong-jiaoyu/seu-laodong-kecheng-daoxue-2026/) |
+
+以上均为**同学投稿的手册外材料**，非学校印发的手册内容。每份材料目录内的 `README.md` 记录了
+来源、年份、适用范围与脱敏说明；引用时须连同这些信息一并给出，并提示以学校正式文件和当年通知为准。
+
+投稿方式见仓库根目录的 [CONTRIBUTING.md](../CONTRIBUTING.md)；不想走命令行，直接用 GitHub 的
+"材料投稿" issue 模板贴文件或链接。
 
 ## 红线
 
