@@ -44,7 +44,7 @@ jobs:
             const checklist = [
               '学校每年 8—9 月印发新版《大学生手册》。请按以下清单核对：',
               '',
-              '1. 到教务处下载专区-学籍专区（<https://jwc.seu.edu.cn/xjk/list.htm>）确认是否已发布 ' + year + ' 版；',
+              '1. 确认是否取得 ' + year + ' 版手册 PDF：教务处网站不公开发布电子版（下载专区、信息通知均无），往年 PDF 靠同学分享/社区投稿；同时到教务处"管理规定"栏目（<https://jwc.seu.edu.cn/glgd/list.htm>）看当年单项规章有无更新；',
               '2. 若已发布，按 `tools/rebuild.md` 流程再生产：OCR → 清洗 → 数值表逐值对图 → 更新 references/ 与 data/ → `python3 tools/check.py` 全绿 → 重跑 tests/golden-qa.md 并记录到 regression-notes.md；',
               '3. 更新版本声明三处：SKILL.md 版本横幅、README、pack（重新运行 `python3 tools/make_pack.py`）。',
               '',
